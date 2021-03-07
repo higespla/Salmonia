@@ -1,6 +1,15 @@
 # Salmonia
 Download JSON from Nintendo and Upload SalmonStats automatically.
 
+## Notice
+This project is forked from [tkgstrator/Salmonia](https://github.com/tkgstrator/Salmonia)
+
+Changes made to the original are as follows:
+
+* All files are output within the same directory as the scripts.
+
+Thank you.
+
 ## Requirements
 * Python3
 
@@ -22,6 +31,7 @@ If Salmonia can not get iksm_session with API changes, you can do it with mitmpr
 - [fiddler instructions](https://splamp.info/salmon/temp/howto_iksm.php)
  
 # Thanks
+* [@tkgling](https://twitter.com/tkgling) (Original Salmonia)
 * [@frozenpandaman!](https://twitter.com/frozenpandaman) (splatnet2statink and s2s API)
 * [@NexusMine](https://twitter.com/NexusMine) (Flapg API)
 * [@Yukinkling](https://twitter.com/Yukinkling) (Startup SalmonStats project)

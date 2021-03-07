@@ -262,7 +262,7 @@ def get_cookie(session_token, userLang, ver):
 def get_hash_from_s2s_api(id_token, timestamp):
     '''Passes an id_token and timestamp to the s2s API and fetches the resultant hash from the response.'''
 
-    f = open("config.json", mode="r")
+    f = open(os.path.join(app_path, "config.json"), mode="r")
     config_data = json.load(f)
     try:
         num_errors = config_data["api_errors"]

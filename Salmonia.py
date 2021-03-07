@@ -12,6 +12,8 @@ VERSION = "1.0.8"
 LANG = "en-US"
 URL = "https://salmon-stats.yuki.games/"
 
+APP_PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
+
 class Param():
     def __init__(self):
         self.splatnet2 = 0
@@ -26,7 +28,7 @@ class Param():
         self.output()
 
     def output(self):
-        with open("config.json", mode="w") as f:
+        with open(os.path.join(APP_PATH, "config.json"), mode="w") as f:
             data = {
                 "iksm_session": self.iksm_session,
                 "session_token": self.session_token,
@@ -44,7 +46,7 @@ class SalmonRec():
     def __init__(self): # Initialize
         print(datetime.now().strftime("%H:%M:%S ") + "Salmonia version " + VERSION)
         print(datetime.now().strftime("%H:%M:%S ") + "Thanks @Yukinkling and @barley_ural!")
-        path = os.path.dirname(os.path.abspath(sys.argv[0])) + "/config.json"
+        path = os.path.join(APP_PATH, "config.json")
         self.param = Param() # Setup Parameters
 
         try:
@@ -60,13 +62,13 @@ class SalmonRec():
             self.param.setup() # Generate temporary config.json
             self.setConfig()
 
-        dir = os.listdir() # Directory Checking
+        dir = os.listdir(APP_PATH) # Directory Checking
         if "json" not in dir:
             print(datetime.now().strftime("%H:%M:%S ") + "Make directory...")
-            os.mkdir("json")
+            os.mkdir(os.path.join(APP_PATH, "json"))
         else:
             file = []
-            dir = os.listdir("json")
+            dir = os.listdir(os.path.join(APP_PATH, "json"))
             for p in dir:
                 file.append(p[0:-5])
             file.sort(key=int, reverse=True)
@@ -139,7 +141,7 @@ class SalmonRec():
 
     def upload(self, resid):
         resid = str(resid)
-        path = "json/" + resid + ".json"
+        path = os.path.join(APP_PATH, "json", f"{ resid }.json")
         file = json.load(open(path, "r"))
         result = {"results": [file]}
         url = "https://salmon-stats-api.yuki.games/api/results"
@@ -162,17 +164,17 @@ class SalmonRec():
             print(datetime.now().strftime("%H:%M:%S Result ID:") + resid + " failure.")
             message = datetime.now().strftime("%H:%M:%S Result ID:" + resid + " : unrecoginized schedule id.\n")
             self.writeLog(message)
-            with open("unupload_list.txt", mode="a") as f:
+            with open(os.path.join(APP_PATH, "unupload_list.txt"), mode="a") as f:
                 f.write(resid + ".json\n")
 
     def writeLog(self, message):
-        with open("error.log", mode="a") as f:
+        with open(os.path.join(APP_PATH, "error.log"), mode="a") as f:
             f.write(message)
         f.close()
 
     def uploadAll(self):
         file = []
-        dir = os.listdir("json")
+        dir = os.listdir(os.path.join(APP_PATH, "json"))
         for p in dir:
             file.append(p[0:-5])
         file.sort(key=int)
@@ -183,7 +185,7 @@ class SalmonRec():
         url = "https://salmon-stats-api.yuki.games/api/results"
         for job_id in file:
             if self.param.salmonstats < int(job_id):
-                path = "json/" + job_id + ".json"
+                path = os.path.join(APP_PATH, "json", f"{ job_id }.json")
                 results += [json.load(open(path, "r"))]
                 if len(results) % 10 == 0:
                     res = requests.post(url, data=json.dumps({"results": results}), headers=headers)
@@ -220,8 +222,7 @@ class SalmonRec():
                 str(job_id)
             res = requests.get(url, cookies=dict(
                 iksm_session=self.param.iksm_session)).text
-            path = os.path.dirname(os.path.abspath(
-                sys.argv[0])) + "/json/" + str(job_id) + ".json"
+            path = os.path.join(APP_PATH, "json", f"{ str(job_id) }.json")
             with open(path, mode="w") as f:
                 f.write(res)
             print(datetime.now().strftime("%H:%M:%S ") + "Saved " + str(job_id) + " from SplatNet2.")
